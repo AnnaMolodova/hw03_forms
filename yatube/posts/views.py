@@ -13,11 +13,11 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts =  Post.objects.all()
+    posts = Post.objects.all()
     context = {
         'group': group,
         'posts': posts
-        }
+    }
     context.update(Create_Page(Post.objects.all(), request))
     return render(request, 'posts/group_list.html', context)
 
