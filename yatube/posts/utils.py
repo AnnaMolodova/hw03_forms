@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator 
- 
+
 
 def Create_Page(queryset, request):
     paginator = Paginator(queryset, 10)
