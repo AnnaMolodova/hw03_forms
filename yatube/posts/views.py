@@ -1,50 +1,36 @@
 from django.core.paginator import Paginator
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .models import Group, Post, User
 from .forms import PostForm
+from .utils import Create_Page
 
-
-User = get_user_model()
 
 
 def index(request):
-    posts = Post.objects.all()
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {
-        'page_obj': page_obj,
-    }
+    context = Create_Page(Post.objects.all(), request)
     return render(request, 'posts/index.html', context)
 
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = Post.objects.all()
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    posts =  Post.objects.all()
     context = {
         'group': group,
-        'page_obj': page_obj,
+        'posts': posts
     }
+    context.update(Create_Page(Post.objects.all(), request))
     return render(request, 'posts/group_list.html', context)
 
 
 def profile(request, username):
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
-    posts = author.posts.all()
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
     context = {
         'author': author,
-        'page_obj': page_obj,
     }
+    context.update(Create_Page(author.posts.all(), request))
     return render(request, template, context)
 
 
