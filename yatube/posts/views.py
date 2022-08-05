@@ -13,7 +13,7 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = Post.objects.all()
+    posts = Post.objects.filter(group=group)
     context = {
         'group': group,
         'posts': posts
@@ -58,6 +58,7 @@ def post_create(request):
     return render(request, template, {'form': form})
 
 
+@login_required
 def post_edit(request, post_id):
     template = 'posts/create_post.html'
     post = get_object_or_404(Post, pk=post_id)
